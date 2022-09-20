@@ -1,0 +1,55 @@
+name: Execute_All_API
+
+on: 
+  workflow_dispatch:
+    inputs:
+      Build-Version:
+        required: true
+      Environment:
+        type: environment
+  
+jobs:
+  Execution-Start-Slack-Notification:
+    runs-on: ubuntu-latest
+    environment: ${{ github.event.inputs.Environment }}
+    
+    steps:
+    - name: Send Slack Message-Personal Slack
+      uses: archive/github-actions-slack@master
+      id: send-message
+      with:
+        slack-function: send-message
+        slack-bot-user-oauth-access-token: ${{ secrets.SLACK_TOKEN_RSTKMFG }}
+        slack-channel: C043T1M03Q8
+        slack-text: Automation Script execution started for ERP Version-${{ github.event.inputs.Build-Version }} On ${{ github.event.inputs.Environment }} by ${{ github.actor }}
+
+    - name: Send "Slack Message" Result
+      run: echo "Data - ${{ steps.send-message.outputs.slack-result }}"
+ 
+  workflow-1:
+    needs: Execution-Start-Slack-Notification  
+    uses: ./.github/workflows/API-1.yml
+    secrets: inherit
+  
+  workflow-2:
+    if: ${{ always() }}  
+    needs: workflow-1
+    uses: ./.github/workflows/API-2.yml
+    secrets: inherit
+
+  Execution-Completed-Slack-Notification:
+    if: ${{ always() }}  
+    needs: [workflow-1,workflow-2]
+    runs-on: ubuntu-latest    
+    steps:
+    - name: Send Slack Message-Personal Slack
+      uses: archive/github-actions-slack@master
+      id: send-message1
+      with:
+        slack-function: send-message
+        slack-bot-user-oauth-access-token: ${{ secrets.SLACK_TOKEN_RSTKMFG }}
+        slack-channel: C043T1M03Q8
+        slack-text: Execution Completed. Kindly have look on GitHub Action for Detailed Report.
+ 
+    - name: Send "Slack Message" Result
+      run: echo "Data - ${{ steps.send-message1.outputs.slack-result }}"
