@@ -17,7 +17,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        Plan: ["Temp/Test1","Temp/Test2"]
+        Plan: ["Test1","Test2"]
     
     steps:
     - name: Get current date
@@ -79,7 +79,7 @@ jobs:
         cd $GITHUB_WORKSPACE/ANT
         echo "Selected Plan Name="${{matrix.Plan}}
         echo "Selected Environment is="${{ github.event.inputs.Environment }}
-        xvfb-run ant -file build.xml "-DTestEnv=${{ github.event.inputs.Environment }}" "-DBrowser=${{ github.event.inputs.Browser }}" "-DTestPlan=Regression_API/${{matrix.Plan}}" runtests
+        xvfb-run ant -file build.xml "-DTestEnv=${{ github.event.inputs.Environment }}" "-DBrowser=${{ github.event.inputs.Browser }}" "-DTestPlan=Temp/${{matrix.Plan}}" runtests
          
     - name: Publish Test Report
       uses: mikepenz/action-junit-report@v3
