@@ -2,7 +2,12 @@ name: M_temp1
 
 on: 
   workflow_call:
-
+  workflow_dispatch:
+    inputs:
+      Build-Version:
+        required: true
+      Environment:
+        type: environment
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -118,12 +123,13 @@ jobs:
     - uses: 8398a7/action-slack@v3
       with:
         status: custom
+        
         fields: job,took
         custom_payload: |
           {
             attachments: [{
               color: '${{ job.status }}' === 'success' ? 'good' : '${{ job.status }}' === 'failure' ? 'danger' : 'warning',
-              text: ` ${{matrix.Plan}} status ${{ job.status }} and completed in  ${process.env.AS_TOOK}`,
+              text: `${{ steps.PlanName.outputs.PlanName}} status ${{ job.status }} and completed in  ${process.env.AS_TOOK}`,
             }]
           }
       env:
