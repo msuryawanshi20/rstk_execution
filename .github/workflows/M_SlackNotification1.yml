@@ -8,7 +8,8 @@ jobs:
     runs-on: ubuntu-latest
     env: 
        PROVAR_HOME: ${{ github.workspace }}/ProvarHome
-
+       SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL_RSTKMFG }}
+       
     steps:
     - name: Get current date
       id: date
@@ -26,6 +27,4 @@ jobs:
               text: `${process.env.AS_WORKFLOW}\n${process.env.AS_JOB}) executed by ${{ github.actor }}, status is ${{ job.status }} and took ${process.env.AS_TOOK} for execution`,
             }]
           }
-      env: 
-       SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
 
