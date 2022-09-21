@@ -120,17 +120,10 @@ jobs:
         name: Execution_Report_for_${{github.workflow}}_${{ steps.PlanName.outputs.PlanName}}-${{ steps.date.outputs.date }}_${{github.run_attempt}}-${{job.status}}
         path: ${{ github.workspace }}/ANT/Results/*
 
-    - uses: 8398a7/action-slack@v3       
+    - uses: 8398a7/action-slack@v3
       with:
-        status: custom
-        fields: workflow,job,commit,repo,ref,author,took
-        custom_payload: |
-          {
-           attachments: [{
-              color: '${{ job.status }}' === 'success' ? 'good' : '${{ job.status }}' === 'failure' ? 'danger' : 'warning',
-              text: `${process.env.AS_WORKFLOW}\n${process.env.AS_JOB} (${process.env.AS_COMMIT}) of ${process.env.AS_REPO}@${process.env.AS_REF} by ${process.env.AS_AUTHOR} ${{ job.status }} in ${process.env.AS_TOOK}`,
-            }]
-          }
+         status: ${{ job.status }}
+         fields: author,action,eventName,workflow,job,took # selectable (default: repo,message)       
       env:
         SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL_RSTKMFG }}
       if: always() # Pick up events even if the job fails or is canceled.
