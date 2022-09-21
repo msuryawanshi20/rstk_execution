@@ -4,7 +4,28 @@ on:
   workflow_dispatch:
 
 jobs:
-  build:
+  Execution-Start-Slack-Notification:
+    runs-on: ubuntu-latest
+    environment: ${{ github.event.inputs.Environment }}
+    
+    steps:
+    - name: Send Slack Message-Personal Slack
+      uses: archive/github-actions-slack@master
+      id: send-message
+      with:
+        slack-function: send-message
+        slack-bot-user-oauth-access-token: ${{ secrets.SLACK_TOKEN_RSTKMFG }}
+        slack-channel: C043T1M03Q8
+        slack-text: Automation Script execution started for ERP Version-${{ github.event.inputs.Build-Version }} On ${{ github.event.inputs.Environment }} by ${{ github.actor }}
+
+    - name: Send "Slack Message" Result
+      run: echo "Data - ${{ steps.send-message.outputs.slack-result }}"
+
+
+
+  Execution-CompletedNotification:
+    if: ${{ always() }}  
+    needs: Execution-Start-Slack-Notification   
     runs-on: ubuntu-latest
     env: 
        PROVAR_HOME: ${{ github.workspace }}/ProvarHome
