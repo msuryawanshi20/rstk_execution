@@ -47,7 +47,7 @@ jobs:
       uses: actions/checkout@v2
       with:
           ref: 'Test-Branch'
-          repository: cboyapati/rsqasampleproj
+          repository: msuryawanshi20/ParallelExecution/
           token: ${{ secrets.GITTOKEN }}    
  
     - name: Send Slack Message
