@@ -41,7 +41,7 @@ jobs:
     - name: Clone Repository
       uses: actions/checkout@v2
       with:
-          ref: 'Test-Branch'
+          ref: 'master'
           repository: msuryawanshi20/ParallelExecution
           token: ${{ secrets.GITTOKEN }}    
  
