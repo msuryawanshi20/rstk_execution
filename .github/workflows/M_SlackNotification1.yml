@@ -1,0 +1,31 @@
+name: M_SlackNotification1
+
+on: 
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    env: 
+       PROVAR_HOME: ${{ github.workspace }}/ProvarHome
+
+    steps:
+    - name: Get current date
+      id: date
+      run: echo "::set-output name=date::$(date +'%Y-%m-%d_%H_%M_%S')"
+
+    - name: send build completion notification
+    - uses: 8398a7/action-slack@v3
+      with:
+        status: custom
+        fields: workflow,job,commit,repo,ref,author,took
+        custom_payload: |
+          {
+            attachments: [{
+              color: '${{ job.status }}' === 'success' ? 'good' : '${{ job.status }}' === 'failure' ? 'danger' : 'warning',
+              text: `${process.env.AS_WORKFLOW}\n${process.env.AS_JOB}) executed by ${{ github.actor }}, status is ${{ job.status }} and took ${process.env.AS_TOOK} for execution`,
+            }]
+          }
+      env: 
+       SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+
