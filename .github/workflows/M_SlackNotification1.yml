@@ -2,7 +2,11 @@ name: M_SlackNotification1
 
 on: 
   workflow_dispatch:
-
+    inputs:
+      Build-Version:
+        required: true
+      Environment:
+        type: environment
 jobs:
   Execution-Start-Slack-Notification:
     runs-on: ubuntu-latest
