@@ -128,7 +128,7 @@ jobs:
           {
             attachments: [{
               color: '${{ job.status }}' === 'success' ? 'good' : '${{ job.status }}' === 'failure' ? 'danger' : 'warning',
-              text: `${{ steps.PlanName.outputs.PlanName}} status '${{ job.status }}'} and completed in  ${process.env.AS_TOOK}`,
+              text: `${{ steps.PlanName.outputs.PlanName}} status  ${{ job.status }} in ${process.env.AS_TOOK}`,
             }]
           }         
           
