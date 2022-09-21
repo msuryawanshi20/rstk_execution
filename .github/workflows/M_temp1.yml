@@ -12,7 +12,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        Plan: ["Test1","Test2"]
+        Plan: ["Temp/Test1","Temp/Test2"]
     
     steps:
     - name: Get current date
@@ -118,12 +118,12 @@ jobs:
     - uses: 8398a7/action-slack@v3
       with:
         status: custom
-        fields: workflow,job,commit,repo,ref,author,took
+        fields: job,took
         custom_payload: |
           {
             attachments: [{
               color: '${{ job.status }}' === 'success' ? 'good' : '${{ job.status }}' === 'failure' ? 'danger' : 'warning',
-              text: `${process.env.AS_WORKFLOW}\n${process.env.AS_JOB} exeucted by ${{ github.actor }} status ${{ job.status }} and completed in  ${process.env.AS_TOOK}`,
+              text: ` ${{matrix.Plan}} status ${{ job.status }} and completed in  ${process.env.AS_TOOK}`,
             }]
           }
       env:
