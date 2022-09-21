@@ -120,7 +120,6 @@ jobs:
         name: Execution_Report_for_${{github.workflow}}_${{ steps.PlanName.outputs.PlanName}}-${{ steps.date.outputs.date }}_${{github.run_attempt}}-${{job.status}}
         path: ${{ github.workspace }}/ANT/Results/*
 
-    - name: Send execution Completion Notification      
     - uses: 8398a7/action-slack@v3
       with:
         status: custom
