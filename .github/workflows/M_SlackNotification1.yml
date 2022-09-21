@@ -39,18 +39,23 @@ jobs:
        SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL_RSTKMFG }}
        
     steps: 
-      - uses: 8398a7/action-slack@v3
+
+      - name: Send Slack Message-Personal Slack
+        uses: archive/github-actions-slack@master
+        id: send-message1
         with:
-          status: custom
-          fields: workflow,job,commit,repo,ref,author,took
-          custom_payload: |
-            {
-              attachments: [{
-                color: '${{ job.status }}' === 'success' ? 'good' : '${{ job.status }}' === 'failure' ? 'danger' : 'warning',
-                text: `${process.env.AS_WORKFLOW}\n${process.env.AS_JOB} exeucted by ${{ github.actor }} status ${{ job.status }} and completed in  ${process.env.AS_TOOK}`,
-              }]
-            }
-        env:
-          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL_RSTKMFG }}
-        if: always() # Pick up events even if the job fails or is canceled.
+          slack-function: send-message
+          slack-bot-user-oauth-access-token: ${{ secrets.SLACK_TOKEN_RSTKMFG }}
+          slack-channel: C043T1M03Q8
+          slack-text: Execution Completed. Please visit GitHub Action for more details. 
+    
+      - name: Get Build URL
+        uses: actions/checkout@v1
+      - run: echo "${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}" > buildURL.log
+      - name: Send build URL to slack
+        uses: adrey/slack-file-upload-action@master
+        with:
+          token: ${{ secrets.SLACK_TOKEN_RSTKMFG }}
+          path: buildURL.log
+          channel: provar_notification	  
         
