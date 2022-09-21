@@ -122,7 +122,7 @@ jobs:
 
     - name: Send execution Completion Notification      
     - uses: 8398a7/action-slack@v3
-        with:
+      with:
           status: custom
           fields: workflow,job,commit,repo,ref,author,took
           custom_payload: |
@@ -132,9 +132,9 @@ jobs:
                 text: `${process.env.AS_WORKFLOW}\n${process.env.AS_JOB} exeucted by ${{ github.actor }} status ${{ job.status }} and completed in  ${process.env.AS_TOOK}`,
               }]
             }
-        env:
-          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL_RSTKMFG }}
-        if: always() 
+      env:
+        SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL_RSTKMFG }}
+      if: always() 
 
 
         
