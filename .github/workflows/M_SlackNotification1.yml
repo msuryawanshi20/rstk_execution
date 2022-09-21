@@ -25,11 +25,14 @@ jobs:
     - name: Send "Slack Message" Result
       run: echo "Data - ${{ steps.send-message.outputs.slack-result }}"
 
-
+  workflow-1:
+    needs: Execution-Start-Slack-Notification  
+    uses: ./.github/workflows/M_temp1.yml
+    secrets: inherit
 
   Execution-CompletedNotification:
     if: ${{ always() }}  
-    needs: Execution-Start-Slack-Notification   
+    needs: workflow-1   
     runs-on: ubuntu-latest
     env: 
        PROVAR_HOME: ${{ github.workspace }}/ProvarHome
