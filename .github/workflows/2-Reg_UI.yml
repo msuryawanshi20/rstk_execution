@@ -41,9 +41,9 @@ jobs:
     - name: Clone Repository
       uses: actions/checkout@v2
       with:
-          ref: 'Test-Branch'
-          repository: cboyapati/rsqasampleproj
-          token: ${{ secrets.GITTOKEN }}    
+          ref: 'master'
+          repository: msuryawanshi20/ParallelExecution
+          token: ${{ secrets.GITTOKEN }}     
  
     - name: Send Slack Message
       uses: archive/github-actions-slack@master
