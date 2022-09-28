@@ -66,3 +66,4 @@ jobs:
           token: ${{ secrets.SLACK_CHANNEL_PERSONAL }}
           path: buildURL.log
           channel: provar_notification
+
