@@ -12,7 +12,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        Plan: ["Inventory Transactions","Work Order_without_Reversal","CPQ and Contract"]
+        Plan: ["Inventory Transactions","Work Order","CPQ and Contract"]
     
 
     steps:
