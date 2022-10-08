@@ -12,7 +12,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        Plan: ["Mfg Engg","Inventory Transactions","CPQ and Contract"]
+        Plan: ["Mfg Engg","RMA","Shop Floor","System Setup"]
     
     steps:
     - name: Get current date
