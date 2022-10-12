@@ -44,7 +44,7 @@ jobs:
         java-version: 8
 
     - name: Clone Repository
-      uses: actions/checkout@latest
+      uses: actions/checkout@v3.1.0
       with:
           ref: 'Test-Branch'
           repository: cboyapati/rsqasampleproj
