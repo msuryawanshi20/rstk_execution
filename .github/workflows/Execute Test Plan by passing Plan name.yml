@@ -14,12 +14,23 @@ on:
         required: true
         description: 'Select Environment on you want to execute scripts'
 jobs:
-  build:
+  build-${{github.event.inputs.plan}}:
     runs-on: ubuntu-latest
     env: 
        PROVAR_HOME: ${{ github.workspace }}/ProvarHome
         
     steps:
+    - name: Send Slack Message-Personal Slack
+      uses: archive/github-actions-slack@latest
+      id: send-message
+      with:
+        slack-function: send-message
+        slack-bot-user-oauth-access-token: ${{ secrets.SLACK_TOKEN_PERSONAL }}
+        slack-channel: ${{ secrets.SLACK_CHANNEL_PERSONAL }}
+        slack-text: Automation Script execution started for ERP Version-${{ github.event.inputs.Build-Version }} On ${{ github.event.inputs.Environment }} by ${{ github.actor }}
+
+    - name: Send "Slack Message" Result
+      run: echo "Data - ${{ steps.send-message.outputs.slack-result }}"    
     - name: Get current date
       id: date
       run: echo "::set-output name=date::$(date +'%Y-%m-%d_%H_%M_%S')"
@@ -63,10 +74,8 @@ jobs:
     - name: Send "Slack Message" Result
       run: echo "Data - ${{ steps.send-message.outputs.slack-result }}"
 
-    - name: Execute Test Plan-${{github.event.inputs.plan}}
-      run: |
-        echo "Test Plan Name Env Var--:"${{ steps.PlanName.outputs.PlanName}}
-        echo "Browser---"${{ github.event.inputs.Browser }}
+    - name: Download and Setup Required Softwares/Utilities
+      run: | 
         mkdir $GITHUB_WORKSPACE/ProvarHome
         curl -O https://download.provartesting.com/2.6.2/Provar_ANT_2.6.2.02.zip
         unzip -o Provar_ANT* -d ProvarHome
@@ -75,7 +84,12 @@ jobs:
         wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | sudo apt-key add -        
         sudo echo "deb [arch=amd64]  http://dl.google.com/linux/chrome/deb/ stable main" >>sudo tee -a /etc/apt/sources.list.d/google-chrome.list
         sudo apt-get -y install google-chrome-stable
-        sudo add-apt-repository ppa:mozillateam/firefox-next && sudo apt install firefox
+        sudo add-apt-repository ppa:mozillateam/firefox-next && sudo apt install firefox       
+
+    - name: Execute Test Plan-${{github.event.inputs.plan}}
+      run: |
+        echo "Test Plan Name Env Var--:"${{ steps.PlanName.outputs.PlanName}}
+        echo "Browser---"${{ github.event.inputs.Browser }}
         echo $PROVAR_HOME
         cd $GITHUB_WORKSPACE/ANT
         echo "Selected Plan Name="${{matrix.Plan}}
@@ -112,7 +126,7 @@ jobs:
       with:
        token: ${{ secrets.SLACK_TOKEN_PERSONAL }}
        path: ${{ github.workspace }}/ANT/Execution_Report_for_${{github.workflow}}_${{ steps.PlanName.outputs.PlanName}}-${{ steps.date.outputs.date }}_${{github.run_attempt}}-${{job.status}}.zip
-       channel: provar-gitaction  #Here we need to provide channel Name Instead of Channel ID
+       channel: provar-gitaction  #Provide channel "Name" Instead of Channel ID
 
     - name: Attached Report Zip file to WorkFlow
       uses: actions/upload-artifact@v3.1.0
