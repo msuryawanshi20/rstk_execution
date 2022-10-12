@@ -22,7 +22,7 @@ jobs:
     steps:
     - name: Send Slack Message-Personal Slack
       uses: archive/github-actions-slack@latest
-      id: send-message
+      id: send-message1
       with:
         slack-function: send-message
         slack-bot-user-oauth-access-token: ${{ secrets.SLACK_TOKEN_PERSONAL }}
@@ -30,7 +30,7 @@ jobs:
         slack-text: Automation Script execution started for ERP Version-${{ github.event.inputs.Build-Version }} On ${{ github.event.inputs.Environment }} by ${{ github.actor }}
 
     - name: Send "Slack Message" Result
-      run: echo "Data - ${{ steps.send-message.outputs.slack-result }}"    
+      run: echo "Data - ${{ steps.send-message1.outputs.slack-result }}"    
     - name: Get current date
       id: date
       run: echo "::set-output name=date::$(date +'%Y-%m-%d_%H_%M_%S')"
