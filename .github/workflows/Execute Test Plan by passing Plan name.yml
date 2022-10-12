@@ -14,7 +14,7 @@ on:
         required: true
         description: 'Select Environment on you want to execute scripts'
 jobs:
-  build-${{github.event.inputs.plan}}:
+  build:
     runs-on: ubuntu-latest
     env: 
        PROVAR_HOME: ${{ github.workspace }}/ProvarHome
