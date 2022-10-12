@@ -92,7 +92,7 @@ jobs:
         echo "Browser---"${{ github.event.inputs.Browser }}
         echo $PROVAR_HOME
         cd $GITHUB_WORKSPACE/ANT
-        echo "Selected Plan Name="${{matrix.Plan}}
+        echo "Selected Plan Name="${{github.event.inputs.plan}}
         echo "Selected Environment is="${{ github.event.inputs.Environment }}
         xvfb-run ant -file build.xml "-DTestEnv=${{ github.event.inputs.Environment }}" "-DBrowser=${{ github.event.inputs.Browser }}" "-DTestPlan=${{github.event.inputs.plan}}" runtests
          
@@ -102,7 +102,7 @@ jobs:
       if: ${{ always() }}
       with:
          report_paths: '${{ github.workspace }}/ANT/Results/JUnit html/TEST*.xml'    # Path to test results 
-         check_name: JUnit Report-${{matrix.Plan}}
+         check_name: JUnit Report-${{github.event.inputs.plan}}
          fail_on_failure: false
          require_tests: true
          include_passed: true
@@ -142,6 +142,6 @@ jobs:
         slack-function: send-message
         slack-bot-user-oauth-access-token: ${{ secrets.SLACK_TOKEN_PERSONAL }}
         slack-channel: ${{ fromJson(steps.send-message.outputs.slack-result).response.channel }}
-        slack-text: Execution Completed For Test Plan-"*${{matrix.Plan}}*"-Execution_Status-"*${{job.status}}*"
+        slack-text: Execution Completed For Test Plan-"*${{github.event.inputs.plan}}*"-Execution_Status-"*${{job.status}}*"
         slack-optional-thread_ts: ${{ fromJson(steps.send-message.outputs.slack-result).response.message.ts }}
         slack-optional-reply_broadcast: true # To broadcast thread reply in channel
