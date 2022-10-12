@@ -46,7 +46,6 @@ jobs:
        SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL_RSTKMFG }}
        
     steps: 
-    
       - name: Send Slack Message-Personal Slack
         uses: archive/github-actions-slack@v2.4.0
         id: send-message1
