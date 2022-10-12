@@ -21,7 +21,7 @@ jobs:
         
     steps:
     - name: Send Slack Message-Personal Slack
-      uses: archive/github-actions-slack@latest
+      uses: archive/github-actions-slack@v2.4.0
       id: send-message1
       with:
         slack-function: send-message
