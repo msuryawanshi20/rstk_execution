@@ -21,7 +21,7 @@ jobs:
         
     steps:
     - name: Send Slack Message-Personal Slack
-      uses: archive/github-actions-slack@v2.4.0
+      uses: archive/github-actions-slack@v2.6.0
       id: send-message1
       with:
         slack-function: send-message
@@ -31,21 +31,22 @@ jobs:
 
     - name: Send "Slack Message" Result
       run: echo "Data - ${{ steps.send-message1.outputs.slack-result }}"    
+      
     - name: Get current date
       id: date
-      run: echo "::set-output name=date::$(date +'%Y-%m-%d_%H_%M_%S')"
-
+      run: echo "date=$(date +'%Y-%m-%d_%H_%M_%S')" >> $GITHUB_OUTPUT
+      
     - name: Remove space from Test Plan
       id: TestPlanName
       run: |
         temp="${{github.event.inputs.plan}}"	
-        echo "::set-output name=TestPlanName::$(echo ${temp// /_})"
+        echo "TestPlanName=$(echo ${temp// /_})" >> $GITHUB_OUTPUT
         
     - name: Remove forward slash from Test Plan
       id: PlanName
       run: |
         temp="${{ steps.TestPlanName.outputs.TestPlanName}}"	
-        echo "::set-output name=PlanName::$(echo ${temp/\//-})" 
+        echo "PlanName=$(echo ${temp/\//-})" >> $GITHUB_OUTPUT
         
     - uses: actions/checkout@v3.1.0
     - name: Set up JDK 8
@@ -63,7 +64,7 @@ jobs:
  
  
     - name: Send Slack Message
-      uses: archive/github-actions-slack@v2.4.0
+      uses: archive/github-actions-slack@v2.6.0
       id: send-message
       with:
         slack-function: send-message
@@ -77,8 +78,8 @@ jobs:
     - name: Download and Setup Required Softwares/Utilities
       run: | 
         mkdir $GITHUB_WORKSPACE/ProvarHome
-        curl -O https://download.provartesting.com/2.6.2/Provar_ANT_2.6.2.02.zip
-        unzip -o Provar_ANT* -d ProvarHome
+        curl -O https://download.provartesting.com/2.8.0/Provar_ANT_2.8.0.03.zip
+		unzip -o Provar_ANT* -d ProvarHome
         rm Provar_ANT_*
         sudo apt-get update && sudo apt-get upgrade -y     
         wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | sudo apt-key add -        
@@ -136,7 +137,7 @@ jobs:
         path: ${{ github.workspace }}/ANT/Results/*
 
     - name: Send execution Completion Notification
-      uses: archive/github-actions-slack@v2.4.0
+      uses: archive/github-actions-slack@v2.6.0
       if: ${{ always() }}
       with:
         slack-function: send-message
