@@ -46,14 +46,7 @@ jobs:
        SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL_RSTKMFG }}
 
     steps:
-    - name: Send execution Completion Notification
-      uses: archive/github-actions-slack@v2.4.0
-      if: ${{ always() }}
-      with:
-        slack-function: send-message
-        slack-bot-user-oauth-access-token: ${{secrets.SLACK_TOKEN_RSTKMFG}}
-        slack-channel: ${{ fromJson(steps.send-message.outputs.slack-result).response.channel }}
-        slack-text: Execution Completed. Please visit GitHub Action for more details.        
+
     - name: Get Build URL
       uses: actions/checkout@v3.1.0
     - run: echo "${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}" > buildURL.log
