@@ -20,7 +20,7 @@ jobs:
       with:
         slack-function: send-message
         slack-bot-user-oauth-access-token: ${{ secrets.SLACK_TOKEN_RSTKMFG }}
-        slack-channel: {{ secrets.SLACK_CHANNEL_RSTKMFG }}
+        slack-channel: ${{ secrets.SLACK_CHANNEL_RSTKMFG }}
         slack-text: Automation Script execution started for ERP Version-${{ github.event.inputs.Build-Version }} On ${{ github.event.inputs.Environment }} by ${{ github.actor }}
 
     - name: Send "Slack Message" Result
