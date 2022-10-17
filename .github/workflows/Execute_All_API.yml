@@ -51,7 +51,7 @@ jobs:
         id: send-message1
         with:
           slack-function: send-message
-          slack-bot-user-oauth-access-token: ${{ secrets.SLACK_TOKEN_RSTKMFG }}
+          slack-bot-user-oauth-access-token: $ {{ secrets.SLACK_TOKEN_RSTKMFG }}
           slack-channel: ${{ secrets.SLACK_CHANNEL_RSTKMFG }}
           slack-text: Execution Completed. Please visit GitHub Action for more details. 
     
@@ -62,6 +62,6 @@ jobs:
       - name: Send build URL to slack
         uses: adrey/slack-file-upload-action@1.0.5
         with:
-          token: ${{ secrets.SLACK_TOKEN_RSTKMFG }}
+          token: $ {{ secrets.SLACK_TOKEN_RSTKMFG }}
           path: buildURL.log
           channel: provar_notification	
