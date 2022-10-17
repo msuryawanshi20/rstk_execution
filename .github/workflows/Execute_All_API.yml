@@ -46,22 +46,22 @@ jobs:
        SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL_RSTKMFG }}
        
     steps: 
-      - name: Send Slack Message-Personal Slack
-        uses: archive/github-actions-slack@v2.4.0
-        id: send-message1
-        with:
-          slack-function: send-message
-          slack-bot-user-oauth-access-token: ${{ secrets.SLACK_TOKEN_RSTKMFG }}
-          slack-channel: ${{ secrets.SLACK_CHANNEL_RSTKMFG }}
-          slack-text: Execution Completed. Please visit GitHub Action for more details. 
+    - name: Send Slack Message-Personal Slack
+      uses: archive/github-actions-slack@v2.4.0
+      id: send-message1
+      with:
+        slack-function: send-message
+        slack-bot-user-oauth-access-token: ${{ secrets.SLACK_TOKEN_RSTKMFG }}
+        slack-channel: ${{ secrets.SLACK_CHANNEL_RSTKMFG }}
+        slack-text: Execution Completed. Please visit GitHub Action for more details. 
     
-      - name: Get Build URL
-        uses: actions/checkout@v3.1.0
-      - run: echo "${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}" > buildURL.log
+    - name: Get Build URL
+      uses: actions/checkout@v3.1.0
+    - run: echo "${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}" > buildURL.log
       
-      - name: Send build URL to slack
-        uses: adrey/slack-file-upload-action@1.0.5
-        with:
-          token: $ {{ secrets.SLACK_TOKEN_RSTKMFG }}
-          path: buildURL.log
-          channel: provar_notification
+    - name: Send build URL to slack
+      uses: adrey/slack-file-upload-action@1.0.5
+      with:
+        token: $ {{ secrets.SLACK_TOKEN_RSTKMFG }}
+        path: buildURL.log
+        channel: provar_notification
