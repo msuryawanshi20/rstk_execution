@@ -51,7 +51,7 @@ jobs:
         id: send-message1
         with:
           slack-function: send-message
-          slack-bot-user-oauth-access-token: "${{ secrets.SLACK_TOKEN_RSTKMFG }}"
+          slack-bot-user-oauth-access-token: ${{ secrets.SLACK_TOKEN_RSTKMFG }}
           slack-channel: ${{ secrets.SLACK_CHANNEL_RSTKMFG }}
           slack-text: Execution Completed. Please visit GitHub Action for more details. 
     
