@@ -64,4 +64,4 @@ jobs:
         with:
           token: $ {{ secrets.SLACK_TOKEN_RSTKMFG }}
           path: buildURL.log
-          channel: provar_notification	
+          channel: provar_notification
