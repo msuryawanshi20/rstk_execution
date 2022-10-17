@@ -55,6 +55,9 @@ jobs:
         slack-channel: ${{ secrets.SLACK_CHANNEL_RSTKMFG }}
         slack-text: Execution Completed. Please visit GitHub Action for more details. 
     
+    - name: Send "Slack Message" Result
+      run: echo "Data - ${{ steps.send-message1.outputs.slack-result }}"
+    
     - name: Get Build URL
       uses: actions/checkout@v3.1.0
     - run: echo "${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}" > buildURL.log
