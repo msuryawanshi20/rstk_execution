@@ -25,3 +25,14 @@ jobs:
 
     - name: Send "Slack Message" Result
       run: echo "Data - ${{ steps.send-message.outputs.slack-result }}"
+      
+  workflow-1:
+    needs: Execution-Start-Slack-Notification  
+    uses: ./.github/workflows/API-1.yml
+    secrets: inherit
+  
+  workflow-2:
+    if: success() || failure()
+    needs: workflow-1
+    uses: ./.github/workflows/API-2.yml
+    secrets: inherit      
