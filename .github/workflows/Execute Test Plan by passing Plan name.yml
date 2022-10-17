@@ -45,8 +45,8 @@ jobs:
     - name: Remove forward slash from Test Plan
       id: PlanName
       run: |
-        temp="${{ steps.TestPlanName.outputs.TestPlanName}}"	
-        echo "PlanName=$(echo ${temp/\//-})" >> $GITHUB_OUTPUT
+       temp="${{ steps.TestPlanName.outputs.TestPlanName}}"	
+       echo "PlanName=$(echo ${temp/\//-})" >> $GITHUB_OUTPUT
 	
     - uses: actions/checkout@v3.1.0
     - name: Set up JDK 8
