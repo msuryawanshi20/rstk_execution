@@ -30,23 +30,24 @@ jobs:
         slack-text: Automation Script execution started for ERP Version-${{ github.event.inputs.Build-Version }} On ${{ github.event.inputs.Environment }} by ${{ github.actor }}
 
     - name: Send "Slack Message" Result
-      run: echo "Data - ${{ steps.send-message1.outputs.slack-result }}"    
+      run: echo "Data - ${{ steps.send-message1.outputs.slack-result }}"   
+      
     - name: Get current date
       id: date
-      run: echo "::set-output name=date::$(date +'%Y-%m-%d_%H_%M_%S')"
-
+      run: echo "date=$(date +'%Y-%m-%d_%H_%M_%S')" >> $GITHUB_OUTPUT
+      
     - name: Remove space from Test Plan
       id: TestPlanName
       run: |
         temp="${{github.event.inputs.plan}}"	
-        echo "::set-output name=TestPlanName::$(echo ${temp// /_})"
+        echo "TestPlanName=$(echo ${temp// /_})" >> $GITHUB_OUTPUT
         
     - name: Remove forward slash from Test Plan
       id: PlanName
       run: |
         temp="${{ steps.TestPlanName.outputs.TestPlanName}}"	
-        echo "::set-output name=PlanName::$(echo ${temp/\//-})" 
-        
+        echo "PlanName=$(echo ${temp/\//-})" >> $GITHUB_OUTPUT
+	
     - uses: actions/checkout@v3.1.0
     - name: Set up JDK 8
       uses: actions/setup-java@v3.5.1
