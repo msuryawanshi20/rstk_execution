@@ -116,7 +116,6 @@ jobs:
         cd $GITHUB_WORKSPACE/ANT
         echo "compressing Results folder"
         zip -v -r Execution_Report_for_${{ steps.PlanName.outputs.PlanName}}-${{ steps.date.outputs.date }}_${{github.run_attempt}}-${{job.status}}.zip Results/*
-        zip -v -r Execution_Report_for_${{ steps.PlanName.outputs.PlanName}}-${{ steps.date.outputs.date }}_${{github.run_attempt}}-${{job.status}}.zip Results/*
         echo "-----List of file-----"
         ls -a
        
