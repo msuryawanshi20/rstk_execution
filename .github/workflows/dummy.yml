@@ -66,6 +66,7 @@ jobs:
         echo ${'${{ job.status }}' === 'success' ? 'succeeded' : '${{ job.status }}' === 'failure' ? 'failed' }
       
     - uses: 8398a7/action-slack@v3
+      if: always()
       with:
         status: custom
         fields: all # changed
