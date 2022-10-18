@@ -52,4 +52,4 @@ jobs:
   
     - name: Test output
       run: |
-        echo '${{ job.status }}' === 'success' ? 'Passed' : '${{ job.status }}' === 'failure' ? 'Failed' : 'cancelled'
+        echo " Status=${'${{ job.status }}' === 'success' ? 'succeeded' : '${{ job.status }}' === 'failure' ? 'failed' : '${{ job.status }}'} in ${process.env.AS_TOOK}"
