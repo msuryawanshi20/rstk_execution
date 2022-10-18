@@ -48,7 +48,7 @@ jobs:
     steps: 
     
       - name: Send Slack Message-Personal Slack
-        uses: archive/github-actions-slack@v2.4.0
+        uses: archive/github-actions-slack@v2.6.0
         id: send-message1
         with:
           slack-function: send-message
@@ -57,7 +57,7 @@ jobs:
           slack-text: Execution Completed. Please visit GitHub Action for more details. 
     
       - name: Get Build URL
-        uses: actions/checkout@v3.1.0
+        uses: actions/checkout@v2.5.0
       - run: echo "${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}" > buildURL.log
       
       - name: Send build URL to slack
@@ -65,5 +65,5 @@ jobs:
         with:
           token: ${{ secrets.SLACK_CHANNEL_PERSONAL }}
           path: buildURL.log
-          channel: provar-gitaction	
+          channel: provar-gitaction
 
