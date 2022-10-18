@@ -1,0 +1,57 @@
+name: Dummy
+
+on: 
+  workflow_dispatch:
+    inputs:
+      Build-Version:
+        required: true
+      Environment:
+        type: environment
+
+  
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    env: 
+       PROVAR_HOME: ${{ github.workspace }}/ProvarHome
+       
+    strategy:
+      fail-fast: false
+      matrix:
+        Plan: ["SYDATA-Purchase Order","SYDATA-Sales Order","Work Order"]
+        
+    steps:
+    - name: Get current date
+      id: date
+      run: echo "date=$(date +'%Y-%m-%d_%H_%M_%S')" >> $GITHUB_OUTPUT
+      
+    - name: Remove space from Test Plan
+      id: TestPlanName
+      run: |
+        temp="${{github.event.inputs.plan}}"	
+        echo "TestPlanName=$(echo ${temp// /_})" >> $GITHUB_OUTPUT
+        
+    - name: Remove forward slash from Test Plan
+      id: PlanName
+      run: |
+        temp="${{ steps.TestPlanName.outputs.TestPlanName}}"	
+        echo "PlanName=$(echo ${temp/\//-})" >> $GITHUB_OUTPUT
+        
+    - uses: actions/checkout@v3.1.0
+    - name: Set up JDK 8
+      uses: actions/setup-java@v3.5.1
+      with:
+        distribution: 'adopt'
+        java-version: 8
+
+    - name: Clone Repository
+      uses: actions/checkout@v3.1.0
+      with:
+          ref: 'Test-Branch'
+          repository: cboyapati/rsqasampleproj
+          token: ${{ secrets.GITTOKEN }}    
+ 
+    - name: Send Slack Message
+      run: |
+        echo "Execution Started for Test Plan "*${{ steps.PlanName.outputs.PlanName}}*" at "*${{ steps.date.outputs.date }}*" "
+	    	echo "The selected color is ${{ steps.PlanName.outputs.Plan_Name }}"        		          
