@@ -53,7 +53,7 @@ jobs:
  
     - name: Send Slack Message
       run: |
-        echo "The selected color is ${{ steps.PlanName.outputs.Plan_Name }}"      
+        echo "The selected color is ${{ steps.PlanName.outputs.PlanName }}"      
         
         
     - name: Set color
