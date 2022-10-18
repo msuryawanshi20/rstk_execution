@@ -50,8 +50,8 @@ jobs:
       id: send-message
       with:
         slack-function: send-message
-        slack-bot-user-oauth-access-token: ${{ secrets.SLACK_TOKEN_RSTKMFG }}
-        slack-channel: ${{ secrets.SLACK_CHANNEL_RSTKMFG }}
+        slack-bot-user-oauth-access-token: ${{ secrets.SLACK_TOKEN_PERSONAL }}
+        slack-channel: ${{ secrets.SLACK_CHANNEL_PERSONAL }}
         slack-text: Execution Started for Test Plan "*${{ steps.PlanName.outputs.PlanName}}*" at "*${{ steps.date.outputs.date }}*"
 
     - name: Send "Slack Message" Result
@@ -107,9 +107,9 @@ jobs:
       uses: adrey/slack-file-upload-action@1.0.5
       if: ${{ failure() }}
       with:
-       token: ${{ secrets.SLACK_TOKEN_RSTKMFG }}
+       token: ${{ secrets.SLACK_TOKEN_PERSONAL }}
        path: ${{ github.workspace }}/ANT/Execution_Report_for_${{github.workflow}}_${{ steps.PlanName.outputs.PlanName}}-${{ steps.date.outputs.date }}_${{github.run_attempt}}-${{job.status}}.zip
-       channel: provar_notification  #Here we need to provide channel Name Instead of Channel ID
+       channel: provar-gitaction  #Here we need to provide channel Name Instead of Channel ID
 
     - name: Attached Report Zip file to WorkFlow
       uses: actions/upload-artifact@v3.1.0
@@ -123,7 +123,7 @@ jobs:
       if: ${{ always() }}
       with:
         slack-function: send-message
-        slack-bot-user-oauth-access-token: ${{ secrets.SLACK_TOKEN_RSTKMFG }}
+        slack-bot-user-oauth-access-token: ${{ secrets.SLACK_TOKEN_PERSONAL }}
         slack-channel: ${{ fromJson(steps.send-message.outputs.slack-result).response.channel }}
         slack-text: Execution Completed For Test Plan-"*${{matrix.Plan}}*"-Execution_Status-"*${{job.status}}*"
         slack-optional-thread_ts: ${{ fromJson(steps.send-message.outputs.slack-result).response.message.ts }}
