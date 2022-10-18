@@ -53,5 +53,4 @@ jobs:
  
     - name: Send Slack Message
       run: |
-        echo "Execution Started for Test Plan "*${{ steps.PlanName.outputs.PlanName}}*" at "*${{ steps.date.outputs.date }}*" "
-	echo "The selected color is ${{ steps.PlanName.outputs.Plan_Name }}"        		          
+        echo "The selected color is ${{ steps.PlanName.outputs.Plan_Name }}"        		          
