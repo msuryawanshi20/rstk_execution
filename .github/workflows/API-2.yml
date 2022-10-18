@@ -129,4 +129,3 @@ jobs:
         slack-text: Execution Completed For Test Plan-"*${{matrix.Plan}}*"-Execution_Status-"*${{job.status}}*"
         slack-optional-thread_ts: ${{ fromJson(steps.send-message.outputs.slack-result).response.message.ts }}
         slack-optional-reply_broadcast: true # To broadcast thread reply in channel
-        
