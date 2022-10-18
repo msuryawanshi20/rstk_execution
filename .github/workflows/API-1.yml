@@ -13,7 +13,7 @@ jobs:
       fail-fast: false
       matrix:
         Plan: ["SYDATA-Purchase Order","SYDATA-Sales Order","Work Order"]
-    
+        
     steps:
     - name: Get current date
       id: date
