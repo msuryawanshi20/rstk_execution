@@ -18,7 +18,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        Plan: ["SYDATA-Purchase Order","SYDATA-Sales Order","Work Order"]
+        Plan: ["SYDATA-Purchase Order"]
         
     steps:
     - name: Get current date
@@ -28,7 +28,7 @@ jobs:
     - name: Remove space from Test Plan
       id: TestPlanName
       run: |
-        temp="${{github.event.inputs.plan}}"	
+        temp="${{matrix.Plan}}"	
         echo "TestPlanName=$(echo ${temp// /_})" >> $GITHUB_OUTPUT
         
     - name: Remove forward slash from Test Plan
@@ -53,4 +53,12 @@ jobs:
  
     - name: Send Slack Message
       run: |
-        echo "The selected color is ${{ steps.PlanName.outputs.Plan_Name }}"        		          
+        echo "The selected color is ${{ steps.PlanName.outputs.Plan_Name }}"      
+        
+        
+    - name: Set color
+      id: random-color-generator
+      run: echo "SELECTED_COLOR=green" >> $GITHUB_OUTPUT
+      
+    - name: Get color
+      run: echo "The selected color is ${{ steps.random-color-generator.outputs.SELECTED_COLOR }}"
