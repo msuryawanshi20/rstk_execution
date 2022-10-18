@@ -51,14 +51,17 @@ jobs:
         java-version: 8
   
     - name: Test output
+      if: always()
       run: |
         echo " Status=${'${{ job.status }}' === 'success' ? 'succeeded' : '${{ job.status }}' === 'failure' ? 'failed' : '${{ job.status }}'} "
    
     - name: Test output
+      if: always()    
       run: |
         echo " Test    ${'${{ job.status }}' === 'success' ? 'succeeded' : '${{ job.status }}' === 'failure' ? 'failed'}"
 
     - name: Test output
+      if: always()
       run: |
         echo ${'${{ job.status }}' === 'success' ? 'succeeded' : '${{ job.status }}' === 'failure' ? 'failed' }
       
