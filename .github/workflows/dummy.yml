@@ -52,4 +52,4 @@ jobs:
   
     - name: Test output
       run: |
-        echo "'${{ job.status }}' === 'success' ? 'Passed' : '${{ job.status }}' === 'failure' ? 'Failed' : 'cancelled'"
+        echo '${{ job.status }}' === 'success' ? 'Passed' : '${{ job.status }}' === 'failure' ? 'Failed' : 'cancelled'
