@@ -23,7 +23,7 @@ jobs:
     - name: Remove space from Test Plan
       id: TestPlanName
       run: |
-        temp="${{github.event.inputs.plan}}"	
+        temp="${{matrix.Plan}}"	
         echo "TestPlanName=$(echo ${temp// /_})" >> $GITHUB_OUTPUT
         
     - name: Remove forward slash from Test Plan
