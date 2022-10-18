@@ -53,6 +53,12 @@ jobs:
     - name: Test output
       run: |
         echo " Status=${'${{ job.status }}' === 'success' ? 'succeeded' : '${{ job.status }}' === 'failure' ? 'failed' : '${{ job.status }}'} "
-        echo " Test    ${'${{ job.status }}' === 'success' ? 'succeeded' : '${{ job.status }}' === 'failure' ? 'failed' : '${{ job.status }}'}"
-        echo ${'${{ job.status }}' === 'success' ? 'succeeded' : '${{ job.status }}' === 'failure' ? 'failed' : '${{ job.status }}'}
+   
+    - name: Test output
+      run: |
+        echo " Test    ${'${{ job.status }}' === 'success' ? 'succeeded' : '${{ job.status }}' === 'failure' ? 'failed'}"
+
+    - name: Test output
+      run: |
+        echo ${'${{ job.status }}' === 'success' ? 'succeeded' : '${{ job.status }}' === 'failure' ? 'failed' }
       
