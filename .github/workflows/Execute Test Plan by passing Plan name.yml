@@ -125,7 +125,7 @@ jobs:
       if: ${{ failure() }}
       with:
        token: ${{ secrets.SLACK_TOKEN_PERSONAL }}
-       path: ${{ github.workspace }}/ANT/Execution_Report_for_${{github.workflow}}_${{ steps.PlanName.outputs.PlanName}}-${{ steps.date.outputs.date }}_${{github.run_attempt}}-${{job.status}}.zip
+       path: ${{ github.workspace }}/ANT/Execution_Report_for_${{ steps.PlanName.outputs.PlanName}}-${{ steps.date.outputs.date }}_${{github.run_attempt}}-${{job.status}}.zip
        channel: provar-gitaction  #Provide channel "Name" Instead of Channel ID
        
     - name: Attached Report Zip file to WorkFlow
