@@ -12,7 +12,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        Plan: ["SYDATA-Purchase Order","SYDATA-Sales Order","Work Order"]
+        Plan: ["SYDATA-Purchase Order","SYDATA-Sales Order","Work Order","Sales Order","Accounts Payable"]
         
     steps:
     - name: Get current date
