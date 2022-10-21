@@ -43,7 +43,7 @@ jobs:
     runs-on: ubuntu-latest
     env: 
        PROVAR_HOME: ${{ github.workspace }}/ProvarHome
-       SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL_PERSONAL }}
+       SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL_RSTKMFG }}
        
     steps: 
     
@@ -52,8 +52,8 @@ jobs:
         id: send-message1
         with:
           slack-function: send-message
-          slack-bot-user-oauth-access-token: ${{ secrets.SLACK_TOKEN_PERSONAL }}
-          slack-channel: ${{ secrets.SLACK_CHANNEL_PERSONAL }}
+          slack-bot-user-oauth-access-token: ${{ secrets.SLACK_TOKEN_RSTKMFG }}
+          slack-channel: ${{ secrets.SLACK_CHANNEL_RSTKMFG }}
           slack-text: Execution Completed. Please visit GitHub Action for more details. 
     
       - name: Get Build URL
@@ -63,6 +63,6 @@ jobs:
       - name: Send build URL to slack
         uses: adrey/slack-file-upload-action@1.0.5
         with:
-          token: ${{ secrets.SLACK_CHANNEL_PERSONAL }}
+          token: ${{ secrets.SLACK_CHANNEL_RSTKMFG }}
           path: buildURL.log
-          channel: provar-gitaction	
+          channel: provar_notification	
