@@ -55,7 +55,7 @@ jobs:
         java-version: 8
         
     - name: Clone Repository
-      uses: actions/checkout@v3.1.0
+      uses: actions/checkout@v2.5.0
       with:
           ref: 'Test-Branch'
           repository: cboyapati/rsqasampleproj
@@ -144,3 +144,22 @@ jobs:
         slack-text: Execution Completed For Test Plan-"*${{github.event.inputs.plan}}*"-Execution_Status-"*${{job.status}}*"
         slack-optional-thread_ts: ${{ fromJson(steps.send-message.outputs.slack-result).response.message.ts }}
         slack-optional-reply_broadcast: true # To broadcast thread reply in channel
+
+    - name: Send Slack Message-Personal Slack
+      uses: archive/github-actions-slack@v2.6.0
+      with:
+        slack-function: send-message
+        slack-bot-user-oauth-access-token: ${{ secrets.SLACK_TOKEN_PERSONAL }}
+        slack-channel: ${{ secrets.SLACK_CHANNEL_PERSONAL }}
+        slack-text: Execution Completed. Please visit GitHub Action for more details. 
+    
+    - name: Get Build URL
+      uses: actions/checkout@v2.5.0
+    - run: echo "${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}" > buildURL.log
+      
+    - name: Send build URL to slack
+      uses: adrey/slack-file-upload-action@1.0.5
+      with:
+        token: ${{ secrets.SLACK_CHANNEL_PERSONAL }}
+        path: buildURL.log
+        channel: provar-gitaction	
