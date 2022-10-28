@@ -163,6 +163,6 @@ jobs:
       uses: adrey/slack-file-upload-action@1.0.5
       if: ${{ always() }}
       with:
-        token: ${{ secrets.SLACK_CHANNEL_PERSONAL }}
+        token: ${{ secrets.SLACK_TOKEN_PERSONAL }}
         path: buildURL.log
         channel: provar-gitaction	
