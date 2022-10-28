@@ -46,9 +46,9 @@ jobs:
        SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL_PERSONAL }}
        
     steps: 
-    
       - name: Send Slack Message-Personal Slack
         uses: archive/github-actions-slack@v2.6.0
+        if: ${{ always() }}
         id: send-message1
         with:
           slack-function: send-message
@@ -58,10 +58,12 @@ jobs:
     
       - name: Get Build URL
         uses: actions/checkout@v2.5.0
+        if: ${{ always() }}
       - run: echo "${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}" > buildURL.log
       
       - name: Send build URL to slack
         uses: adrey/slack-file-upload-action@1.0.5
+        if: ${{ always() }}
         with:
           token: ${{ secrets.SLACK_CHANNEL_PERSONAL }}
           path: buildURL.log
