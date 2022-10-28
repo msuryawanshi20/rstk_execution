@@ -50,6 +50,7 @@ jobs:
       - name: Send Slack Message-Personal Slack
         uses: archive/github-actions-slack@v2.6.0
         id: send-message1
+        if: ${{ always() }}
         with:
           slack-function: send-message
           slack-bot-user-oauth-access-token: ${{ secrets.SLACK_TOKEN_RSTKMFG }}
@@ -58,10 +59,12 @@ jobs:
     
       - name: Get Build URL
         uses: actions/checkout@v2.5.0
+        if: ${{ always() }}
       - run: echo "${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}" > buildURL.log
       
       - name: Send build URL to slack
         uses: adrey/slack-file-upload-action@1.0.5
+        if: ${{ always() }}
         with:
           token: ${{ secrets.SLACK_TOKEN_RSTKMFG }}
           path: buildURL.log
