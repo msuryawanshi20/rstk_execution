@@ -81,6 +81,7 @@ jobs:
         rm Provar_ANT_*
         cd $GITHUB_WORKSPACE/ProvarHome/lib/
         curl -O https://qaautomation.ml/com.provar.core.testapi_2.303.2.0.jar
+        chmod -R 777 com.provar.core.testapi_2.303.2.0.jar
         ls -l com.provar.core.testapi_2.303.2.0.jar
         wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | sudo apt-key add -        
         sudo echo "deb [arch=amd64]  http://dl.google.com/linux/chrome/deb/ stable main" >>sudo tee -a /etc/apt/sources.list.d/google-chrome.list
