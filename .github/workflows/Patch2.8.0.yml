@@ -1,0 +1,91 @@
+name: Patch2.8.0
+on: 
+  workflow_dispatch:
+    inputs:
+      plan:
+        description: 'Enter Plan Name eg.1)Regression_API eg.2)Regression_API/Work Order'
+        required: true
+      Environment:
+        type: environment
+        required: true
+        description: 'Select Environment on you want to execute scripts'
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    env: 
+       PROVAR_HOME: ${{ github.workspace }}/ProvarHome
+        
+    steps:
+    - uses: actions/checkout@v2.5.0
+    - name: Set up JDK 8
+      uses: actions/setup-java@v3.6.0
+      with:
+        distribution: 'adopt'
+        java-version: 8
+        
+    - name: Clone Repository
+      uses: actions/checkout@v2.5.0
+      with:
+          ref: 'Test-Branch'
+          repository: cboyapati/rsqasampleproj
+          token: ${{ secrets.GITTOKEN }}     
+ 
+    - name: Download and Setup Required Softwares/Utilities
+      run: | 
+        mkdir $GITHUB_WORKSPACE/ProvarHome
+        curl -O https://download.provartesting.com/2.8.0/Provar_ANT_2.8.0.03.zip
+        unzip -o Provar_ANT* -d ProvarHome
+        rm Provar_ANT_*
+        cd $GITHUB_WORKSPACE/ProvarHome/lib/
+        rm -rf com.provar.core.testapi_2.303.2.0.jar
+        curl -O https://qaautomation.ml/com.provar.core.testapi_2.303.2.0.jar
+        chmod -R 777 com.provar.core.testapi_2.303.2.0.jar
+        ls -l com.provar.core.testapi_2.303.2.0.jar
+        chmod -R 777 $GITHUB_WORKSPACE/ProvarHome
+        ls -ltra
+        wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | sudo apt-key add -        
+        sudo echo "deb [arch=amd64]  http://dl.google.com/linux/chrome/deb/ stable main" >>sudo tee -a /etc/apt/sources.list.d/google-chrome.list
+        sudo apt-get -y install google-chrome-stable
+        sudo add-apt-repository ppa:mozillateam/firefox-next && sudo apt install firefox
+        
+    - name: Execute Test Plan-${{github.event.inputs.plan}}
+      run: |
+        echo "Test Plan Name Env Var--:"${{ steps.PlanName.outputs.PlanName}}
+        echo "Browser---"${{ github.event.inputs.Browser }}
+        echo $PROVAR_HOME
+        cd $GITHUB_WORKSPACE/ANT
+        echo "Selected Plan Name="${{github.event.inputs.plan}}
+        echo "Selected Environment is="${{ github.event.inputs.Environment }}
+        xvfb-run ant -file build.xml "-DTestEnv=${{ github.event.inputs.Environment }}" "-DTestPlan=${{github.event.inputs.plan}}" runtests
+         
+    - name: Publish Test Report
+      uses: mikepenz/action-junit-report@v3.5.2
+      id: test-report1
+      if: ${{ always() }}
+      with:
+         report_paths: '${{ github.workspace }}/ANT/Results/JUnit html/TEST*.xml'    # Path to test results 
+         check_name: JUnit Report-${{github.event.inputs.plan}}
+         fail_on_failure: false
+         require_tests: true
+         include_passed: true
+         check_retries: true
+         job_summary: true
+         detailed_summary: true
+         annotate_notice: false        
+         
+    - name: Compressing Results folder(Create Zip File)
+      if: ${{ always() }}
+      run: |
+        cd $GITHUB_WORKSPACE/ANT
+        echo "compressing Results folder"
+        zip -v -r Execution_Report_for_${{ steps.PlanName.outputs.PlanName}}-${{ steps.date.outputs.date }}_${{github.run_attempt}}-${{job.status}}.zip Results/*
+        echo "-----List of file-----"
+        ls -a
+             
+    - name: Attached Report Zip file to WorkFlow
+      uses: actions/upload-artifact@v3.1.0
+      if: ${{ always() }}
+      with:
+        name: Execution_Report_for_${{ steps.PlanName.outputs.PlanName}}-${{ steps.date.outputs.date }}_${{github.run_attempt}}-${{job.status}}
+        path: ${{ github.workspace }}/ANT/Results/*
+        
