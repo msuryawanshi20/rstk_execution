@@ -33,9 +33,8 @@ jobs:
     - name: Download and Setup Required Softwares/Utilities
       run: | 
         mkdir $GITHUB_WORKSPACE/ProvarHome
-        curl -O https://qaautomation.ml/Provar_ANT_2.8.0.03_patch.zip
+        curl -O https://qaautomation.ml/Provar_ANT_2.8.0.03_Patch1.zip
         unzip -o Provar_ANT* -d ProvarHome
-        chmod -R 777 $GITHUB_WORKSPACE/ProvarHome/*
         wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | sudo apt-key add -        
         sudo echo "deb [arch=amd64]  http://dl.google.com/linux/chrome/deb/ stable main" >>sudo tee -a /etc/apt/sources.list.d/google-chrome.list
         sudo apt-get -y install google-chrome-stable
