@@ -2,11 +2,7 @@ name: TimeZoneTest
 
 on: 
   workflow_dispatch:
-    inputs:
-      Build-Version:
-        required: true
-      Environment:
-        type: environment
+
   
 jobs:
   Execution-Start-Slack-Notification:
@@ -16,6 +12,6 @@ jobs:
     steps:
     - name: Test Timez zone
       run: |
-      date
-      sudo timedatectl set-timezone Asia/Calcutta
-      date
+        echo "Today is $(date)"
+        sudo timedatectl set-timezone Asia/Calcutta
+        echo "Date After TimeZoneChange $(date)"
