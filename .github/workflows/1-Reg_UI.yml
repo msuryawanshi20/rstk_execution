@@ -62,15 +62,16 @@ jobs:
 
     - name: Download and Setup Required Softwares/Utilities
       run: | 
-        mkdir $GITHUB_WORKSPACE/ProvarHome
         curl -O https://qaautomation.ml/Provar_ANT_2.8.0.03_Patch1.zip
-        unzip -o Provar_ANT* -d ProvarHome
+        unzip -o Provar_ANT* -d $GITHUB_WORKSPACE/ProvarHome
         rm Provar_ANT_*
+        cd $GITHUB_WORKSPACE/ProvarHome
+        ls -ltr
+        pwd
         sudo apt-get update && sudo apt-get upgrade -y     
         wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | sudo apt-key add -        
         sudo echo "deb [arch=amd64]  http://dl.google.com/linux/chrome/deb/ stable main" >>sudo tee -a /etc/apt/sources.list.d/google-chrome.list
-        sudo apt-get -y install google-chrome-stable
-        sudo add-apt-repository ppa:mozillateam/firefox-next && sudo apt install firefox       
+        sudo apt-get -y install google-chrome-stable      
 
     - name: Execute Test Plan-${{matrix.Plan}}
       run: |
