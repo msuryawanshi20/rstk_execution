@@ -1,0 +1,21 @@
+name: TimeZoneTest
+
+on: 
+  workflow_dispatch:
+    inputs:
+      Build-Version:
+        required: true
+      Environment:
+        type: environment
+  
+jobs:
+  Execution-Start-Slack-Notification:
+    runs-on: ubuntu-latest
+    environment: ${{ github.event.inputs.Environment }}
+    
+    steps:
+    - name: Test Timez zone
+      run: |
+      date
+      sudo timedatectl set-timezone Asia/Calcutta
+      date
