@@ -1,4 +1,4 @@
-name: Execute Test Plan by passing name
+name: Test Download
 on: 
   workflow_dispatch:
     inputs:
@@ -7,8 +7,10 @@ on:
         required: true
       Build-Version:
         description: 'Enter Build Version eg.ERP 23.9'
+        required: true
       Environment:
         type: environment
+        required: true
         description: 'Select Environment on you want to execute scripts'
 jobs:
   build:
@@ -75,15 +77,25 @@ jobs:
       
     - name: Download and Setup Required Softwares/Utilities
       run: | 
-        mkdir $GITHUB_WORKSPACE/ProvarHome
         curl -O https://qaautomation.ml/Provar_ANT_2.8.0.03_Patch1.zip
-        unzip -o Provar_ANT* -d ProvarHome
+        unzip -o Provar_ANT* -d $GITHUB_WORKSPACE/ProvarHome
         rm Provar_ANT_*
         cd $GITHUB_WORKSPACE/ProvarHome
         ls -ltr
         pwd
-        cd ProvarHome
         sudo apt-get update && sudo apt-get upgrade -y     
         wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | sudo apt-key add -        
         sudo echo "deb [arch=amd64]  http://dl.google.com/linux/chrome/deb/ stable main" >>sudo tee -a /etc/apt/sources.list.d/google-chrome.list
         sudo apt-get -y install google-chrome-stable
+        sudo add-apt-repository ppa:mozillateam/firefox-next && sudo apt install firefox
+        
+    - name: Execute Test Plan-${{github.event.inputs.plan}}
+      run: |
+        echo "Test Plan Name Env Var--:"${{ steps.PlanName.outputs.PlanName}}
+        echo "Browser---"${{ github.event.inputs.Browser }}
+        echo $PROVAR_HOME
+        cd $GITHUB_WORKSPACE/ANT
+        echo "Selected Plan Name="${{github.event.inputs.plan}}
+        echo "Selected Environment is="${{ github.event.inputs.Environment }}
+        xvfb-run ant -file build.xml "-DTestEnv=${{ github.event.inputs.Environment }}" "-DBrowser=${{ github.event.inputs.Browser }}" "-DTestPlan=${{github.event.inputs.plan}}" runtests
+     
