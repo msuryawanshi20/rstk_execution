@@ -12,7 +12,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        Plan: ["Mfg Engg","RMA","Shop Floor","System Setup"]
+        Plan: ["MFG Engineering","RMA","Shop Floor","System Setup"]
 
     steps:
 
