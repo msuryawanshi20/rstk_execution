@@ -94,7 +94,7 @@ jobs:
          check_retries: true
          job_summary: true
          detailed_summary: true
-         annotate_notice: false        
+         annotate_notice: true        
          
     - name: Compressing Results folder(Create Zip File)
       if: ${{ always() }}
