@@ -36,17 +36,22 @@ jobs:
     needs: workflow-1
     uses: ./.github/workflows/Personal_API-2.yml
     secrets: inherit
-    
+
+  workflow-3:
+    if: success() || failure()
+    needs: workflow-1
+    uses: ./.github/workflows/Personal_API-3.yml
+    secrets: inherit
+
   Execution-CompletedNotification:
     if: ${{ always() }}  
-    needs: [workflow-1,workflow-2]  
+    needs: [workflow-1,workflow-2,workflow-3]  
     runs-on: ubuntu-latest
     env: 
        PROVAR_HOME: ${{ github.workspace }}/ProvarHome
        SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL_RSTKMFG }}
        
     steps: 
-    
       - name: Send Slack Message-Personal Slack
         uses: archive/github-actions-slack@v2.6.0
         id: send-message1
