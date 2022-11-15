@@ -1,0 +1,132 @@
+name: Personal_API-3
+
+on: 
+  workflow_call:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    env: 
+       PROVAR_HOME: ${{ github.workspace }}/ProvarHome
+
+    strategy:
+      fail-fast: false
+      matrix:
+        Plan: ["Accounts Payable","Accounts Receivable","Inventory Transactions"]
+        
+    steps:
+    
+    - name: Change timezone and Get current date
+      id: date
+      run: |
+        sudo timedatectl set-timezone Asia/Calcutta
+        echo "date=$(date +'%Y-%m-%d_%H_%M_%S')" >> $GITHUB_OUTPUT
+      
+    - name: Remove space from Test Plan
+      id: TestPlanName
+      run: |
+        temp="${{matrix.Plan}}"	
+        echo "TestPlanName=$(echo ${temp// /_})" >> $GITHUB_OUTPUT
+        
+    - name: Remove forward slash from Test Plan
+      id: PlanName
+      run: |
+        temp="${{ steps.TestPlanName.outputs.TestPlanName}}"	
+        echo "PlanName=$(echo ${temp/\//-})" >> $GITHUB_OUTPUT
+        
+    - uses: actions/checkout@v2.5.0
+    - name: Set up JDK 8
+      uses: actions/setup-java@v3.6.0
+      with:
+        distribution: 'adopt'
+        java-version: 8
+
+    - name: Clone Repository
+      uses: actions/checkout@v2.5.0
+      with:
+          ref: 'Test-Branch'
+          repository: cboyapati/rsqasampleproj
+          token: ${{ secrets.GITTOKEN }}    
+ 
+    - name: Send Slack Message
+      uses: archive/github-actions-slack@v2.6.0
+      id: send-message
+      with:
+        slack-function: send-message
+        slack-bot-user-oauth-access-token: ${{ secrets.SLACK_TOKEN_PERSONAL }}
+        slack-channel: ${{ secrets.SLACK_CHANNEL_PERSONAL }}
+        slack-text: Execution Started for Test Plan "*${{ steps.PlanName.outputs.PlanName}}*" at "*${{ steps.date.outputs.date }}*"
+
+    - name: Send "Slack Message" Result
+      run: echo "Data - ${{ steps.send-message.outputs.slack-result }}"
+
+    - name: Download and Setup Required Softwares/Utilities
+      run: | 
+        mkdir $GITHUB_WORKSPACE/ProvarHome
+        curl -O https://qaautomation.ml/Provar_ANT_2.8.0.03_Patch1.zip
+        unzip -o Provar_ANT* -d ProvarHome
+        rm Provar_ANT_*
+        sudo apt-get update && sudo apt-get upgrade -y     
+        wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | sudo apt-key add -        
+        sudo echo "deb [arch=amd64]  http://dl.google.com/linux/chrome/deb/ stable main" >>sudo tee -a /etc/apt/sources.list.d/google-chrome.list
+        sudo apt-get -y install google-chrome-stable
+
+    - name: Execute Test Plan-${{matrix.Plan}}
+      run: |
+        echo "Test Plan Name Env Var--:"${{ steps.PlanName.outputs.PlanName}}
+        echo "Browser---"${{ github.event.inputs.Browser }}
+        echo $PROVAR_HOME
+        cd $GITHUB_WORKSPACE/ANT
+        echo "Selected Plan Name="${{matrix.Plan}}
+        echo "Selected Environment is="${{ github.event.inputs.Environment }}
+        xvfb-run ant -file build.xml "-DTestEnv=${{ github.event.inputs.Environment }}" "-DBrowser=${{ github.event.inputs.Browser }}" "-DTestPlan=Regression_API/${{matrix.Plan}}" runtests
+         
+    - name: Publish Test Report
+      uses: mikepenz/action-junit-report@v3.5.2
+      id: test-report1
+      if: ${{ always() }}
+      with:
+         report_paths: '${{ github.workspace }}/ANT/Results/JUnit html/TEST*.xml'    # Path to test results 
+         check_name: JUnit Report-${{matrix.Plan}}
+         fail_on_failure: false
+         require_tests: true
+         include_passed: true
+         check_retries: true
+         job_summary: true
+         detailed_summary: true
+         annotate_notice: true        
+         
+    - name: Compressing Results folder(Create Zip File)
+      if: ${{ always() }}
+      run: |
+        cd $GITHUB_WORKSPACE/ANT
+        echo "compressing Results folder"
+        zip -v -r Execution_Report_for_${{github.workflow}}_${{ steps.PlanName.outputs.PlanName}}-${{ steps.date.outputs.date }}_${{github.run_attempt}}-${{job.status}}.zip Results/*
+        echo "-----List of file-----"
+        ls -a
+       
+    - name: Upload Report Zip file To Slack
+      uses: adrey/slack-file-upload-action@1.0.5
+      if: ${{ failure() }}
+      with:
+       token: ${{ secrets.SLACK_TOKEN_PERSONAL }}
+       path: ${{ github.workspace }}/ANT/Execution_Report_for_${{github.workflow}}_${{ steps.PlanName.outputs.PlanName}}-${{ steps.date.outputs.date }}_${{github.run_attempt}}-${{job.status}}.zip
+       channel: provar-gitaction  #Here we need to provide channel Name Instead of Channel ID
+
+    - name: Attached Report Zip file to WorkFlow
+      uses: actions/upload-artifact@v3.1.0
+      if: ${{ always() }}
+      with:
+        name: Execution_Report_for_${{ steps.PlanName.outputs.PlanName}}-${{ steps.date.outputs.date }}_${{github.run_attempt}}-${{job.status}}
+        path: ${{ github.workspace }}/ANT/Results/*
+
+    - name: Send execution Completion Notification
+      uses: archive/github-actions-slack@v2.6.0
+      if: ${{ always() }}
+      with:
+        slack-function: send-message
+        slack-bot-user-oauth-access-token: ${{ secrets.SLACK_TOKEN_PERSONAL }}
+        slack-channel: ${{ fromJson(steps.send-message.outputs.slack-result).response.channel }}
+        slack-text: Execution Completed For Test Plan-"*${{matrix.Plan}}*"-Execution_Status-"*${{job.status}}*"
+        slack-optional-thread_ts: ${{ fromJson(steps.send-message.outputs.slack-result).response.message.ts }}
+        slack-optional-reply_broadcast: true # To broadcast thread reply in channel
