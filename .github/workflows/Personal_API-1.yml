@@ -12,7 +12,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        Plan: ["SYDATA-Purchase Order","SYDATA-Sales Order","Work Order","Sales Order","Accounts Payable"]
+        Plan: ["Sales Order APIs","POLOADER"]
         
     steps:
     
