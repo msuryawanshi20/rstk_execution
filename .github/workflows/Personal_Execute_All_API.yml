@@ -39,7 +39,7 @@ jobs:
 
   workflow-3:
     if: success() || failure()
-    needs: workflow-1
+    needs: workflow-2
     uses: ./.github/workflows/Personal_API-3.yml
     secrets: inherit
 
