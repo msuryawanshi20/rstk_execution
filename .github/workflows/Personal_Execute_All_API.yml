@@ -44,7 +44,7 @@ jobs:
     secrets: inherit
 
   Execution-CompletedNotification:
-    if: ${{ always() }}  
+    if: ${{ !cancelled() }}  
     needs: [workflow-1,workflow-2,workflow-3]  
     runs-on: ubuntu-latest
     env: 
