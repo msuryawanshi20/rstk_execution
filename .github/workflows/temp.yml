@@ -18,7 +18,7 @@ jobs:
       run: echo "{{jobs.Execution-Start-Slack-Notification.conclusion}}"
  
   Execution-CompletedNotification:
-    if: ${{ jobs.Execution-Start-Slack-Notification.conclusion!='cancelled' }}  
+    if: ${{ !cancelled() }}  
     runs-on: ubuntu-latest
     env: 
        PROVAR_HOME: ${{ github.workspace }}/ProvarHome
