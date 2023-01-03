@@ -20,7 +20,6 @@ jobs:
     - name: Get Build URL
       if: ${{ always() }}
       id: DummyURL
-    - name: get build URL  
       run: |
         echo "BUILD_URL= ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}" >> $GITHUB_OUTPUT
         echo "BUILD URL IS===> ${{ steps.DummyURL.outputs.BUILD_URL }}"
