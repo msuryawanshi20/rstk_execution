@@ -12,7 +12,8 @@ jobs:
   Execution-Start-Slack-Notification:
     runs-on: ubuntu-latest
     environment: ${{github.event.inputs.Environment}}
-    
+    outputs:
+      output1: ${{ steps.dummyURL.outputs.GIT_URL }}
     steps:
     - name: Send "Slack Message" Result
       run: echo "{{jobs.Execution-Start-Slack-Notification.conclusion}}"
@@ -40,3 +41,5 @@ jobs:
       
       - name: Get URL
         run: echo "The selected color is ${{ steps.dummyURL.outputs.GIT_URL }}" 
+      - run: echo ${{needs.Execution-Start-Slack-Notification.outputs.output1}} ${{needs.job1.outputs.output2}}
+ 
