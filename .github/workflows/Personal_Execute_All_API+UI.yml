@@ -1,0 +1,88 @@
+name: Personal_Execute_All_API+UI
+
+on: 
+  workflow_dispatch:
+    inputs:
+      Build-Version:
+        required: true
+      Environment:
+        type: environment
+  
+jobs:
+  Execution-Start-Slack-Notification:
+    runs-on: ubuntu-latest
+    environment: ${{ github.event.inputs.Environment }}
+    
+    steps:
+    - name: Send Slack Message-Personal Slack
+      uses: archive/github-actions-slack@v2.4.0
+      id: send-message
+      with:
+        slack-function: send-message
+        slack-bot-user-oauth-access-token: ${{ secrets.SLACK_TOKEN_PERSONAL }}
+        slack-channel: ${{ secrets.SLACK_CHANNEL_PERSONAL }}
+        slack-text: Automation Script execution started for *ERP Version*-"*${{ github.event.inputs.Build-Version }}*" On "*${{ github.event.inputs.Environment }}*" by "*${{ github.actor }}*"
+
+    - name: Send "Slack Message" Result
+      run: echo "Data - ${{ steps.send-message.outputs.slack-result }}"
+
+  workflow-1:
+    needs: Execution-Start-Slack-Notification  
+    uses: ./.github/workflows/Personal_API-1.yml
+    secrets: inherit
+  
+  workflow-2:
+    if: success() || failure()
+    needs: workflow-1
+    uses: ./.github/workflows/Personal_API-2.yml
+    secrets: inherit
+
+  workflow-3:
+    if: success() || failure()
+    needs: workflow-2
+    uses: ./.github/workflows/Personal_API-3.yml
+    secrets: inherit
+    
+  workflow-4:
+    if: success() || failure()
+    needs: workflow-3
+    uses: ./.github/workflows/1-Reg_UI.yml
+    secrets: inherit    
+    
+  workflow-5:
+    if: success() || failure()
+    needs: workflow-4
+    uses: ./.github/workflows/2-Reg_UI.yml
+    secrets: inherit 
+
+  Execution-CompletedNotification:
+    if: ${{ !cancelled() }}  
+    needs: [workflow-1,workflow-2,workflow-3,workflow-4,workflow-5]  
+    runs-on: ubuntu-latest
+    env: 
+       PROVAR_HOME: ${{ github.workspace }}/ProvarHome
+       SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL_RSTKMFG }}
+       
+    steps: 
+      - name: Get Build URL
+        uses: actions/checkout@v2.5.0
+        if: ${{ always() }}
+      - run: echo "${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}" > buildURL.log
+      
+      - name: Send build URL to slack
+        uses: adrey/slack-file-upload-action@1.0.5
+        if: ${{ always() }}
+        with:
+          token: ${{ secrets.SLACK_TOKEN_PERSONAL }}
+          path: buildURL.log
+          channel: provar-gitaction	
+          
+      - name: Send Slack Message-Personal Slack
+        uses: archive/github-actions-slack@v2.6.0
+        id: send-message1
+        if: ${{ always() }}
+        with:
+          slack-function: send-message
+          slack-bot-user-oauth-access-token: ${{ secrets.SLACK_TOKEN_PERSONAL }}
+          slack-channel: ${{ secrets.SLACK_CHANNEL_PERSONAL }}
+          slack-text: Execution Completed. Please visit GitHub Action for more details. 
