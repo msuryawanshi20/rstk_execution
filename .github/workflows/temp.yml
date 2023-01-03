@@ -11,7 +11,7 @@ on:
 jobs:
   Execution-Start-Slack-Notification:
     runs-on: ubuntu-latest
-    environment: $ {{ github.event.inputs.Environment }}
+    environment: ${{ github.event.inputs.Environment }}
     
     steps:
     - name: Send "Slack Message" Result
@@ -20,8 +20,10 @@ jobs:
     - name: Get Build URL
       if: ${{ always() }}
       id: DummyURL
-      run:  echo "${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}" >> $GITHUB_OUTPUT
-
+    - name: get build URL  
+      run: |
+        echo "BUILD_URL= ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}" >> $GITHUB_OUTPUT
+        echo "BUILD URL IS===> ${{ steps.DummyURL.outputs.BUILD_URL }}"
 
   Execution-CompletedNotification:
     if: ${{ !cancelled() }}  
@@ -36,7 +38,7 @@ jobs:
       - name: Get Build URL
         uses: actions/checkout@v2.5.0
         if: ${{ always() }}
-      - run: echo ${{ Execution-Start-Slack-Notification.steps.DummyURL.outputs.DummyURL}}"	
+      - run: echo ${{ steps.DummyURL.outputs.DummyURL}}"	
             
       - name: Get Build URL
         uses: actions/checkout@v2.5.0
