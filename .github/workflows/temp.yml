@@ -17,18 +17,11 @@ jobs:
     - name: Send "Slack Message" Result
       run: echo "{{jobs.Execution-Start-Slack-Notification.conclusion}}"
 
-    - name: Get Build URL
-      if: ${{ always() }}
-      id: DummyURL
-      run: |
-        echo "BUILD_URL= ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}" >> $GITHUB_OUTPUT
-        echo "BUILD URL IS===> ${{steps.DummyURL.outputs.BUILD_URL }}"
-
-    - name: Set color
-      id: random-color-generator
-      run: echo "SELECTED_COLOR=${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}" >> $GITHUB_OUTPUT
-    - name: Get color
-      run: echo "The selected color is ${{ steps.random-color-generator.outputs.SELECTED_COLOR }}"
+    - name: Set URL
+      id: dummyURL
+      run: echo "GIT_URL=${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}" >> $GITHUB_OUTPUT
+    - name: Get URL
+      run: echo "The selected color is ${{ steps.dummyURL.outputs.GIT_URL }}"
 
   Execution-CompletedNotification:
     if: ${{ !cancelled() }}  
@@ -43,9 +36,7 @@ jobs:
       - name: Get Build URL
         uses: actions/checkout@v2.5.0
         if: ${{ always() }}
-      - run: echo ${{ steps.DummyURL.outputs.DummyURL}}"	
-            
-      - name: Get Build URL
-        uses: actions/checkout@v2.5.0
-        if: ${{ always() }}
       - run: echo "${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}" > buildURL.log
+      
+      - name: Get URL
+        run: echo "The selected color is ${{ steps.dummyURL.outputs.GIT_URL }}" 
