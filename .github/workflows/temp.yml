@@ -18,9 +18,10 @@ jobs:
       run: echo "{{jobs.Execution-Start-Slack-Notification.conclusion}}"
 
     - name: Get Build URL
-      uses: actions/checkout@v2.5.0
       if: ${{ always() }}
-    - run: echo "${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}" > DummyURL.log
+      id: DummyURL
+      run:  echo "${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}" >> $GITHUB_OUTPUT
+
 
   Execution-CompletedNotification:
     if: ${{ !cancelled() }}  
@@ -35,7 +36,7 @@ jobs:
       - name: Get Build URL
         uses: actions/checkout@v2.5.0
         if: ${{ always() }}
-      - run: cat DummyURL.log
+      - run: echo ${{ Execution-Start-Slack-Notification.steps.DummyURL.outputs.DummyURL}}"	
             
       - name: Get Build URL
         uses: actions/checkout@v2.5.0
