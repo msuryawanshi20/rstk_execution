@@ -11,7 +11,7 @@ on:
 jobs:
   Execution-Start-Slack-Notification:
     runs-on: ubuntu-latest
-    environment: ${{ github.event.inputs.Environment }}
+    environment: ${{github.event.inputs.Environment}}
     
     steps:
     - name: Send "Slack Message" Result
@@ -22,7 +22,13 @@ jobs:
       id: DummyURL
       run: |
         echo "BUILD_URL= ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}" >> $GITHUB_OUTPUT
-        echo "BUILD URL IS===> ${{ steps.DummyURL.outputs.BUILD_URL }}"
+        echo "BUILD URL IS===> ${{steps.DummyURL.outputs.BUILD_URL }}"
+
+    - name: Set color
+      id: random-color-generator
+      run: echo "SELECTED_COLOR=${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}" >> $GITHUB_OUTPUT
+    - name: Get color
+      run: echo "The selected color is ${{ steps.random-color-generator.outputs.SELECTED_COLOR }}"
 
   Execution-CompletedNotification:
     if: ${{ !cancelled() }}  
