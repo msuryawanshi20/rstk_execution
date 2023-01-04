@@ -17,7 +17,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        Plan: ["Sales Order","Purchase Order","Sales Order Setup"]
+        Plan: ["Sales Order","Purchase Order","Sales Order Setup","General Ledger"]
 
     steps:
 
