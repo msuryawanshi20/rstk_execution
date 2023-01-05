@@ -11,7 +11,7 @@ on:
 jobs:
   Execution-Start-Slack-Notification:
     runs-on: ubuntu-latest
-    environment: $ {{github.event.inputs.Environment}}
+    environment: ${{github.event.inputs.Environment}}
     
     steps:
     - name: Send Slack Message-Personal Slack
