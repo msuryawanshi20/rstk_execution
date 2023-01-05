@@ -21,7 +21,7 @@ jobs:
         slack-function: send-message
         slack-bot-user-oauth-access-token: ${{ secrets.SLACK_TOKEN_PERSONAL }}
         slack-channel: ${{ secrets.SLACK_CHANNEL_PERSONAL }}
-        slack-text: Automation Script execution started for ERP Version-${{ github.event.inputs.Build-Version }} On $ {{github.event.inputs.Environment }} by ${{ github.actor }}
+        slack-text: Automation Script execution started for ERP Version-${{ github.event.inputs.Build-Version }} On ${{github.event.inputs.Environment }} by ${{ github.actor }}
 
     - name: Send "Slack Message" Result
       run: echo "Data - ${{ steps.send-message.outputs.slack-result }}"
@@ -39,7 +39,7 @@ jobs:
 
   workflow-3:
     if: success() || failure()
-    needs: workflow-1
+    needs: workflow-2
     uses: ./.github/workflows/3-Reg_UI.yml
     secrets: inherit
 
