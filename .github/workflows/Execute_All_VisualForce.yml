@@ -11,7 +11,7 @@ on:
 jobs:
   Execution-Start-Slack-Notification:
     runs-on: ubuntu-latest
-    environment: ${{ github.event.inputs.Environment }}
+    environment: $ {{github.event.inputs.Environment}}
     
     steps:
     - name: Send Slack Message-Personal Slack
@@ -21,7 +21,7 @@ jobs:
         slack-function: send-message
         slack-bot-user-oauth-access-token: ${{ secrets.SLACK_TOKEN_PERSONAL }}
         slack-channel: ${{ secrets.SLACK_CHANNEL_PERSONAL }}
-        slack-text: Automation Script execution started for ERP Version-${{ github.event.inputs.Build-Version }} On ${{ github.event.inputs.Environment }} by ${{ github.actor }}
+        slack-text: Automation Script execution started for ERP Version-${{ github.event.inputs.Build-Version }} On $ {{github.event.inputs.Environment }} by ${{ github.actor }}
 
     - name: Send "Slack Message" Result
       run: echo "Data - ${{ steps.send-message.outputs.slack-result }}"
@@ -37,9 +37,15 @@ jobs:
     uses: ./.github/workflows/2-Reg_UI.yml
     secrets: inherit
 
+  workflow-3:
+    if: success() || failure()
+    needs: workflow-1
+    uses: ./.github/workflows/3-Reg_UI.yml
+    secrets: inherit
+
   Execution-CompletedNotification:
     if: ${{ always() }}  
-    needs: [workflow-1,workflow-2]  
+    needs: [workflow-1,workflow-2,workflow-3]  
     runs-on: ubuntu-latest
     env: 
        PROVAR_HOME: ${{ github.workspace }}/ProvarHome
